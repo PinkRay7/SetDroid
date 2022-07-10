@@ -1,6 +1,7 @@
 import argparse
 from setdroid import SetDroid
 import time
+import sys
 def parse_args():
     """
     parse command line input
@@ -74,6 +75,7 @@ def parse_args():
 
 def main():
     opts = parse_args()
+    print(sys.argv)
     import os
     if not os.path.exists(opts.app_path[0]):
         print("APK %s does not exist." % (opts.app_path[0]) )
