@@ -4,7 +4,7 @@ import hashlib
 from view import View
 from event import Event
 import re
-
+import traceback
 class Utils(object):
 
     def __init__(self, devices):
@@ -81,25 +81,28 @@ class Utils(object):
     
     
     def draw_event(self,event):
-        for device in self.devices:
-            import cv2
-            image = cv2.imread(device.screenshot_path)
-            if device.screenshot_path != None and event.view !=None:
-                if event.action == "click":
-                    cv2.rectangle(image, (int(event.view.xmin), int(event.view.ymin)), (int(event.view.xmax), int(event.view.ymax)), (0, 0, 255), 5)  
-                elif event.action == "longclick":
-                    cv2.rectangle(image, (int(event.view.xmin), int(event.view.ymin)), (int(event.view.xmax), int(event.view.ymax)), (0, 225, 255), 5) 
-                elif event.action == "edit":
-                    cv2.rectangle(image, (int(event.view.xmin), int(event.view.ymin)), (int(event.view.xmax), int(event.view.ymax)), (225, 0, 255), 5)
+        try:
+            for device in self.devices:
+                import cv2
+                image = cv2.imread(device.screenshot_path)
+                if device.screenshot_path != None and event.view !=None:
+                    if event.action == "click":
+                        cv2.rectangle(image, (int(event.view.xmin), int(event.view.ymin)), (int(event.view.xmax), int(event.view.ymax)), (0, 0, 255), 5)  
+                    elif event.action == "longclick":
+                        cv2.rectangle(image, (int(event.view.xmin), int(event.view.ymin)), (int(event.view.xmax), int(event.view.ymax)), (0, 225, 255), 5) 
+                    elif event.action == "edit":
+                        cv2.rectangle(image, (int(event.view.xmin), int(event.view.ymin)), (int(event.view.xmax), int(event.view.ymax)), (225, 0, 255), 5)
+                    else:
+                        cv2.rectangle(image, (int(event.view.xmin), int(event.view.ymin)), (int(event.view.xmax), int(event.view.ymax)), (225, 225, 255), 5)
                 else:
-                    cv2.rectangle(image, (int(event.view.xmin), int(event.view.ymin)), (int(event.view.xmax), int(event.view.ymax)), (225, 225, 255), 5)
-            else:
-                if event.action == "wrong":
-                    cv2.rectangle(image, (0,0), (1430, 2550), (0, 225, 255), 20)
-                else:
-                    cv2.putText(image,event.action, (100,300), cv2.FONT_HERSHEY_SIMPLEX, 5,(0, 0, 255), 1, cv2.LINE_AA)
-            # image=cv2.resize(image, (256, 512))
-            cv2.imwrite(device.screenshot_path, image)
+                    if event.action == "wrong":
+                        cv2.rectangle(image, (0,0), (1430, 2550), (0, 225, 255), 20)
+                    else:
+                        cv2.putText(image,event.action, (100,300), cv2.FONT_HERSHEY_SIMPLEX, 5,(0, 0, 255), 1, cv2.LINE_AA)
+                # image=cv2.resize(image, (256, 512))            
+                cv2.imwrite(device.screenshot_path, image)
+        except Exception as e:
+            traceback.print_exc()
 
     """
     generate a html file for each strategy
