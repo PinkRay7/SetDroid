@@ -162,21 +162,21 @@ class Device(object):
         try:
             if self.strategy != "language":
                 if view.description!="":
-                    self.use(description=view.description,packageName=view.package).long_click()
+                    self.use(description=view.description,packageName=view.package).long_click(duration=1.0)
                     return
                 elif view.text!="":
-                    self.use(text=view.text,packageName=view.package).long_click()
+                    self.use(text=view.text,packageName=view.package).long_click(duration=1.0)
                     return
                 elif view.instance == 0:
-                    self.use(className=view.className,resourceId=view.resourceId,packageName=view.package).long_click()
+                    self.use(className=view.className,resourceId=view.resourceId,packageName=view.package).long_click(duration=1.0)
                 else:
-                    self.use.long_click(view.x ,view.y)
+                    self.use.long_click(view.x ,view.y,duration=1.0)
             elif view.instance == 0:
-                self.use(className=view.className,resourceId=view.resourceId,packageName=view.package).long_click()
+                self.use(className=view.className,resourceId=view.resourceId,packageName=view.package).long_click(duration=1.0)
             else:
-                self.use.long_click(view.x ,view.y)
+                self.use.long_click(view.x ,view.y,duration=1.0)
         except:
-            self.use.long_click(view.x ,view.y)
+            self.use.long_click(view.x ,view.y,duration=1.0)
             # print("x:"+str(view.x)+",y:"+str(view.y))
             return
     
