@@ -1,6 +1,6 @@
 import argparse
 from setdroid import SetDroid
-
+import time
 def parse_args():
     """
     parse command line input
@@ -19,13 +19,13 @@ def parse_args():
                         help="The percentage of click event", default=15)
     parser.add_argument("-pro_naturalscreen", action="store", dest="pro_naturalscreen", required=False,
                         help="The percentage of click event", default=1)
-    parser.add_argument("-pro_leftscreen", action="store", dest="pro_leftscreen", required=False,
+    parser.add_argument("-pro_leftscreen", action="store", dest="pro_leftscreen", required=False,type=int,
                         help="The percentage of click event", default=80)
     parser.add_argument("-pro_back", action="store", dest="pro_back", required=False,
-                        help="The percentage of click event", default=1)
+                        help="The percentage of click event", default=1,type=int)
     parser.add_argument("-pro_splitscreen", action="store", dest="pro_splitscreen", required=False,
                         help="The percentage of click event", default=0)
-    parser.add_argument("-app_path", action="store", dest="app_path", required=True,
+    parser.add_argument("-app_path", action="append", dest="app_path", required=True,
                         help="The path of the application you want to test")
     parser.add_argument("-is_emulator", action="store", dest="is_emulator", required=False, default=0, type=int,
                         help="Whether the devices are emulators")
@@ -75,12 +75,18 @@ def parse_args():
 def main():
     opts = parse_args()
     import os
-    if not os.path.exists(opts.app_path):
-        print("APK does not exist.")
+    if not os.path.exists(opts.app_path[0]):
+        print("APK %s does not exist." % (opts.app_path[0]) )
+        return
+    if not os.path.exists(opts.app_path[1]):
+        print("APK %s does not exist." % (opts.app_path[1]))
         return
     
     if len(opts.append_device)<2:
         print("You need to define at least two devices")
+        return
+    if len(opts.app_path)!=2:
+        print("You need to define two apps")
         return
     
     if  len(opts.strategy_list)+1!=len(opts.append_device) and opts.serial_or_parallel == 1:
@@ -123,8 +129,19 @@ def main():
         rest_interval=opts.rest_interval,
         trace_path=opts.trace_path
     )
+    start_time =time.time()
     setdroid.start()
     setdroid.stop()
+    end_time = time.time()
+    struct_time = time.gmtime(end_time-start_time)
+
+    print('程序运行用了{0}年{1}月{2}日{3}小时{4}分钟{5}秒'.format(
+    struct_time.tm_year - 1970,
+    struct_time.tm_mon - 1,
+    struct_time.tm_mday - 1,
+    struct_time.tm_hour,
+    struct_time.tm_min,
+    struct_time.tm_sec))
 
 if __name__ == "__main__":
     main()

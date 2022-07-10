@@ -2,7 +2,7 @@ import logging
 import os
 import hashlib
 import time
-
+import traceback
 class Event(object):
 
     def __init__(self, view, action, device, event_count):
@@ -23,15 +23,18 @@ class Event(object):
         self.count = count
     
     def print_event(self):
-        print("Event start=============================")
-        print("Event_count:"+str(self.event_count))
-        if self.view is not None:
-            print("View_text:"+self.view.line)
-        print("Action:"+self.action)
-        print("Device:"+self.device.device_serial)
-        if self.text is not None:
-            print("Text:"+self.text)
-        print("Event end=============================")
+        try:
+            print("Event start=============================")
+            print("Event_count:"+str(self.event_count))
+            if self.view is not None:
+                print("View_text:"+self.view.line)
+            print("Action:"+self.action)
+            print("Device:"+self.device.device_serial)
+            if self.text is not None:
+                print("Text:"+self.text)
+            print("Event end=============================")
+        except Exception as e:
+            traceback.print_exc()
 
 
     

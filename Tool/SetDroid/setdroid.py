@@ -10,7 +10,7 @@ from executor import Executor
 import uiautomator2 as u2
 import time
 from utils import Utils
-
+import traceback
 class SetDroid(object):
     instance = None
     def __init__(self,
@@ -74,7 +74,7 @@ class SetDroid(object):
         self.testcase_count = testcase_count
         self.start_testcase_count = start_testcase_count
         self.event_num = event_num
-        self.app = App(app_path, root_path, app_name)
+        self.app = App(app_path[0], root_path, app_name)
         self.setting_random_denominator = setting_random_denominator
         self.serial_or_parallel = serial_or_parallel
         self.emulator_name = emulator_name
@@ -158,9 +158,10 @@ class SetDroid(object):
 
         #connect device and install app
         if self.is_login_app != 0:
-            for device in self.devices:
-                device.connect()
-                device.install_app(self.app.app_path)
+            self.devices[0].connect()
+            self.devices[0].install_app(self.app_path[0])
+            self.devices[1].connect()
+            self.devices[1].install_app(self.app_path[1])
         else:
             for device in self.devices:
                 device.restart(self.emulator_path,self.emulator_name)
@@ -178,8 +179,8 @@ class SetDroid(object):
                 for strategy in self.strategy_list:
                     try:
                         self.executor.start(strategy)
-                    except:
-                        continue
+                    except Exception as e:
+                        traceback.print_exc()
             else:
                 self.executor.start(0)
             utils = Utils(self.devices)
@@ -196,7 +197,7 @@ class SetDroid(object):
                 device.screenshot_and_getstate(self.root_path,7)
 
     def resize(self,path):
-        from cv2 import cv2
+        import cv2
         image = cv2.imread(path)
         (h, w) = image.shape[:2]
         if w > 2000:
@@ -218,11 +219,11 @@ class SetDroid(object):
 
     
     def stop(self):
-        for root, dirs, files in os.walk(self.root_path, topdown=False):
-            for name in files:
-                if ".png" in name:
-                    image_path=os.path.join(root, name)
-                    self.resize(image_path)
+        # for root, dirs, files in os.walk(self.root_path, topdown=False):
+        #     for name in files:
+        #         if ".png" in name:
+        #             image_path=os.path.join(root, name)
+        #             self.resize(image_path)
         self.enabled = False
         end = time.time()
         print(end-self.start)

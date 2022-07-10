@@ -74,7 +74,7 @@ class Utils(object):
 
     def draw_error_frame(self):
         for device in self.devices:
-            from cv2 import cv2
+            import cv2
             image = cv2.imread(device.screenshot_path)
             cv2.rectangle(image, (1,1), (1430, 2550), (0, 0, 255), 20)
             cv2.imwrite(device.screenshot_path, image)
@@ -82,7 +82,7 @@ class Utils(object):
     
     def draw_event(self,event):
         for device in self.devices:
-            from cv2 import cv2
+            import cv2
             image = cv2.imread(device.screenshot_path)
             if device.screenshot_path != None and event.view !=None:
                 if event.action == "click":

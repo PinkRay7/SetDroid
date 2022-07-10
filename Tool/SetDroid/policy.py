@@ -115,7 +115,7 @@ class RandomPolicy(Policy):
             else:
                 views=[]
                 for view in device.state.all_views:
-                    if view.className in click_classname_lists and view.package in click_package_lists and (view.longClickable=="true" or view.clickable=="true"):
+                    if view.className in click_classname_lists and view.package in click_package_lists and view.longClickable=="true":
                         views.append(view)
                 if len(views)>0:
                     event_view_num = random.randint(0,len(views)-1)

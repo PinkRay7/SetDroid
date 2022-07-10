@@ -277,10 +277,10 @@ class Executor(object):
             event = Event(None, "clear", device, event_count)
             event_count = self.write_draw_and_save_all(device,event,event_count)
         
-        if event_count>3:
-            event=self.injector.change_setting_after_run(event_count,strategy)
-            if event is not None:
-                event_count = self.write_draw_and_save_one(event,event_count)
+        # if event_count>3:
+        #     event=self.injector.change_setting_after_run(event_count,strategy)
+        #     if event is not None:
+        #         event_count = self.write_draw_and_save_one(event,event_count)
         
         #check keyboard
         self.checker.check_keyboard()
@@ -377,10 +377,16 @@ class Executor(object):
             self.utils.draw_event(event)
     
     def wait_load(self,event_count):
-        wait_time=self.checker.check_loading()
-        if wait_time>0:
-            event_count=event_count-1
-            event_count=self.save_all_state(event_count)
+        try:
+            wait_time=self.checker.check_loading()
+            if wait_time>0:
+                event_count=event_count-1
+                event_count=self.save_all_state(event_count)
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            self.restart_devices()
+
 
     def write_draw_and_save_one(self,event,event_count):
         self.utils.write_read_event(None,event_count,event,"all device",event.device.device_num)
@@ -482,17 +488,17 @@ class Executor(object):
                     #judge whether all devices are same
                     if not self.devices[0].state.same(self.devices[1].state):
                         #judge whether the guest devices requests settings
-                        if self.checker.check_setting_request():
-                            event = Event(None, "check_setting_request", self.devices[1], event_count)
-                            event_count = self.write_draw_and_save_one(event,event_count)
-                            request_flag=1
-                        #write wrong
-                        elif self.devices[1].wrong_flag==True:
-                            print("Write wrong!")
-                            self.utils.write_error(1,run_count,self.devices[1].wrong_event_lists,self.devices[1].f_wrong,self.devices[1].wrong_num)
-                            self.devices[1].wrong_num=self.devices[1].wrong_num+1
-                            event = Event(None, "wrong", self.devices[1], event_count)
-                            self.utils.draw_event(event)
+                        # if self.checker.check_setting_request():
+                        #     event = Event(None, "check_setting_request", self.devices[1], event_count)
+                        #     event_count = self.write_draw_and_save_one(event,event_count)
+                        #     request_flag=1
+                        # #write wrong
+                        # elif self.devices[1].wrong_flag==True:
+                        print("Write wrong!")
+                        self.utils.write_error(1,run_count,self.devices[1].wrong_event_lists,self.devices[1].f_wrong,self.devices[1].wrong_num)
+                        self.devices[1].wrong_num=self.devices[1].wrong_num+1
+                        event = Event(None, "wrong", self.devices[1], event_count)
+                        self.utils.draw_event(event)
 
                     #check keyboard
                     self.checker.check_keyboard()
@@ -546,13 +552,13 @@ class Executor(object):
                 self.checker.check_keyboard()
 
                 #injecte a setting change
-                event=self.injector.inject_setting_during_run(event_count,strategy,request_flag)
-                if event is not None:
-                    event_count = self.write_draw_and_save_one(event,event_count)
+                # event=self.injector.inject_setting_during_run(event_count,strategy,request_flag)
+                # if event is not None:
+                #     event_count = self.write_draw_and_save_one(event,event_count)
 
-            event=self.injector.change_setting_after_run(event_count,strategy)
-            if event is not None:
-                event_count = self.write_draw_and_save_one(event,event_count)
+            # event=self.injector.change_setting_after_run(event_count,strategy)
+            # if event is not None:
+            #     event_count = self.write_draw_and_save_one(event,event_count)
             
             if strategy == "language":
                 for device in self.guest_devices:
