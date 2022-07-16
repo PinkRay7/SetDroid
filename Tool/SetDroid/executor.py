@@ -448,6 +448,7 @@ class Executor(object):
                 device.add_file(self.resource_path,resource,"/sdcard")
             if "anki" in self.app.package_name:
                 device.mkdir("/storage/emulated/0/AnkiDroid/")
+                print("add collection.anki2 for"+str(device.device_serial))
                 device.add_file(self.resource_path,"collection.anki2","/storage/emulated/0/AnkiDroid/")
 
     def start(self,strategy):
@@ -476,7 +477,7 @@ class Executor(object):
             #init setting
             event_count=1.0
             event_count=self.save_all_state(event_count)
-            self.injector.init_setting()
+            # self.injector.init_setting()
             
             #clear and start app
             event_count=self.clear_and_restart_app(event_count,strategy)

@@ -8,23 +8,23 @@ def parse_args():
     """
     parser = argparse.ArgumentParser(description="Start SetDroid to detect setting issues.",
                                      formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("-pro_click", action="store", dest="pro_click", required=False,
+    parser.add_argument("-pro_click", action="store", dest="pro_click", required=False,type=int,
                         help="The percentage of click event", default=45)
-    parser.add_argument("-pro_longclick", action="store", dest="pro_longclick", required=False,
+    parser.add_argument("-pro_longclick", action="store", dest="pro_longclick", required=False,type=int,
                         help="The percentage of click event", default=25)
-    parser.add_argument("-pro_scroll", action="store", dest="pro_scroll", required=False,
+    parser.add_argument("-pro_scroll", action="store", dest="pro_scroll", required=False,type=int,
                         help="The percentage of click event", default=5)
-    parser.add_argument("-pro_home", action="store", dest="pro_home", required=False,
+    parser.add_argument("-pro_home", action="store", dest="pro_home", required=False,type=int,
                         help="The percentage of click event", default=0)
-    parser.add_argument("-pro_edit", action="store", dest="pro_edit", required=False,
+    parser.add_argument("-pro_edit", action="store", dest="pro_edit", required=False,type=int,
                         help="The percentage of click event", default=15)
-    parser.add_argument("-pro_naturalscreen", action="store", dest="pro_naturalscreen", required=False,
+    parser.add_argument("-pro_naturalscreen", action="store", dest="pro_naturalscreen", required=False,type=int,
                         help="The percentage of click event", default=1)
     parser.add_argument("-pro_leftscreen", action="store", dest="pro_leftscreen", required=False,type=int,
                         help="The percentage of click event", default=80)
     parser.add_argument("-pro_back", action="store", dest="pro_back", required=False,
                         help="The percentage of click event", default=1,type=int)
-    parser.add_argument("-pro_splitscreen", action="store", dest="pro_splitscreen", required=False,
+    parser.add_argument("-pro_splitscreen", action="store", dest="pro_splitscreen", required=False,type=int,
                         help="The percentage of click event", default=0)
     parser.add_argument("-app_path", action="append", dest="app_path", required=True,
                         help="The path of the application you want to test")
