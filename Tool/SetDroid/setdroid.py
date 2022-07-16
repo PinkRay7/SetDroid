@@ -105,6 +105,7 @@ class SetDroid(object):
         self.executor = Executor(
                 devices=self.devices,
                 app=self.app,
+                app_path=self.app_path,
                 strategy_list=self.strategy_list,
                 pro_click=self.pro_click,
                 pro_longclick=self.pro_longclick,
@@ -173,6 +174,10 @@ class SetDroid(object):
             device.log_crash(self.root_path+"/"+device.device_serial+"_logcat.txt")
             for resource in resourcelist:
                 device.add_file(self.resource_path,resource,"/sdcard")
+            if "anki" in self.app.package_name:
+                device.mkdir("/storage/emulated/0/AnkiDroid/")
+                device.add_file(self.resource_path,"collection.anki2","/storage/emulated/0/AnkiDroid/")
+
         
         if self.choice == 0: #run
             if self.serial_or_parallel == 0:

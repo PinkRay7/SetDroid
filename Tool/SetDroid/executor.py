@@ -17,7 +17,7 @@ from utils import Utils
  
 class Executor(object):
 
-    def __init__(self,devices,app,strategy_list,pro_click,pro_longclick,pro_scroll,
+    def __init__(self,devices,app,app_path,strategy_list,pro_click,pro_longclick,pro_scroll,
                 pro_home,pro_edit,pro_naturalscreen,pro_leftscreen,pro_back,pro_splitscreen,emulator_path,android_system,
                 root_path,resource_path,testcase_count,start_testcase_count,event_num,timeout,policy_name,
                 setting_random_denominator,serial_or_parallel,emulator_name,is_login_app,rest_interval,trace_path,choice):
@@ -34,6 +34,7 @@ class Executor(object):
         self.pro_back = pro_back
         self.pro_splitscreen = pro_splitscreen
         self.app = app
+        self.app_path = app_path
         self.devices = devices
         self.emulator_path = emulator_path
         self.android_system = android_system
@@ -366,15 +367,15 @@ class Executor(object):
         for device in self.devices:
             if device.is_emulator == 0:
                 device.restart(self.emulator_path,self.emulator_name)
-        for device in self.guest_devices:
-            device.connect()
-            device.error_event_lists.clear()
-            device.wrong_event_lists.clear()
-            device.wrong_flag=True
-            self.utils.write_read_event("::restart::all devices::None::None"+'\n',event_count,None,"all devices",device.device_num)
-            event = Event(None, "restart", device, event_count)
-            self.utils.write_event(event,device.device_num,device.f_trace)
-            self.utils.draw_event(event)
+        # for device in self.guest_devices:
+        #     device.connect()
+        #     device.error_event_lists.clear()
+        #     device.wrong_event_lists.clear()
+        #     device.wrong_flag=True
+        #     self.utils.write_read_event("::restart::all devices::None::None"+'\n',event_count,None,"all devices",device.device_num)
+        #     event = Event(None, "restart", device, event_count)
+        #     self.utils.write_event(event,device.device_num,device.f_trace)
+        #     self.utils.draw_event(event)
     
     def wait_load(self,event_count):
         try:
@@ -426,6 +427,28 @@ class Executor(object):
         self.deduplicate_list1.append(self.devices[0].state)
         self.deduplicate_list2.append(self.devices[1].state)
         return False
+    def restart_devices_and_install_app_and_data(self):
+        self.restart_devices(0)
+        #connect device and install app
+        if self.is_login_app != 0:
+            self.devices[0].connect()
+            self.devices[0].install_app(self.app_path[0])
+            self.devices[1].connect()
+            self.devices[1].install_app(self.app_path[1])
+        else:
+            for device in self.devices:
+                device.restart(self.emulator_path,self.emulator_name)
+                device.connect()
+        
+            #add some files to the devices
+        resourcelist=os.listdir(self.resource_path)
+        for device in self.devices:
+            device.log_crash(self.root_path+"/"+device.device_serial+"_logcat.txt")
+            for resource in resourcelist:
+                device.add_file(self.resource_path,resource,"/sdcard")
+            if "anki" in self.app.package_name:
+                device.mkdir("/storage/emulated/0/AnkiDroid/")
+                device.add_file(self.resource_path,"collection.anki2","/storage/emulated/0/AnkiDroid/")
 
     def start(self,strategy):
         #if execute serial, init the strategy of device1, otherwise, init all the guest devices' strategies
@@ -442,7 +465,7 @@ class Executor(object):
         
         run_count=self.start_testcase_count
         while run_count < self.testcase_count:
-            
+            self.restart_devices_and_install_app_and_data()
             #create folder of new run
             run_count=run_count+1
             for device in self.guest_devices:
@@ -451,7 +474,7 @@ class Executor(object):
                 device.make_strategy_runcount(run_count,self.root_path)
             
             #init setting
-            event_count=0.0
+            event_count=1.0
             event_count=self.save_all_state(event_count)
             self.injector.init_setting()
             

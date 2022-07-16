@@ -64,7 +64,7 @@ class Device(object):
         print("----"+port)
         subprocess.run(["adb","-s",self.device_serial,"emu","kill"], stdout=subprocess.PIPE)
         time.sleep(self.rest_interval*20)
-        os.popen(emulator_path+" -avd "+emulator_name+" -read-only -port "+port)
+        os.popen(emulator_path+" -avd "+emulator_name+" -read-only -port "+port+" -no-window")
         print("wait-for-device")
         subprocess.run(["adb","-s",self.device_serial,"wait-for-device"], stdout=subprocess.PIPE)
         print("wait-for-device end")
@@ -206,6 +206,7 @@ class Device(object):
     def log_crash(self,path):
         os.popen("adb -s "+self.device_serial+" logcat -b crash >"+path)
 
-    
+    def mkdir(self,path):
+        subprocess.run(["adb","-s",self.device_serial,"shell", "mkdir", path], stdout=subprocess.PIPE)
 
 
