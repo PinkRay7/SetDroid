@@ -95,10 +95,10 @@ class RandomPolicy(Policy):
             views=[]
             import_views=[]
             for view in device.state.all_views:
-                if view.className in click_classname_lists_important and view.package in click_package_lists :
+                if view.className in click_classname_lists_important and view.package in click_package_lists and view.clickable=="true":
                     views.append(view)
                     import_views.append(view)
-                if view.className in click_classname_lists and view.package in click_package_lists :
+                if view.className in click_classname_lists and view.package in click_package_lists and view.clickable=="true" :
                     views.append(view)
             if len(views)>0:
                 event_view_num = random.randint(0,len(views)-1)
