@@ -174,9 +174,9 @@ class SetDroid(object):
             device.log_crash(self.root_path+"/"+device.device_serial+"_logcat.txt")
             for resource in resourcelist:
                 device.add_file(self.resource_path,resource,"/sdcard")
-            if "anki" in self.app.package_name:
-                device.mkdir("/storage/emulated/0/AnkiDroid/")
-                device.add_file(self.resource_path,"collection.anki2","/storage/emulated/0/AnkiDroid/")
+            # if "anki" in self.app.package_name:
+            #     device.mkdir("/storage/emulated/0/AnkiDroid/")
+            #     device.add_file(self.resource_path,"collection.anki2","/storage/emulated/0/AnkiDroid/")
 
         
         if self.choice == 0: #run
