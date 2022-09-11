@@ -158,6 +158,26 @@ class Device(object):
             self.use.click(view.x ,view.y)
             return "xy"
     
+
+    def _click(self,view,text):
+        try:
+            if text != None:
+                if view.text == text:
+                    self.use(text=view.text,packageName=view.package).click()
+                    return "text"
+            if view.description!="":
+                self.use(description=view.description,packageName=view.package).click()
+                return "description"
+            elif view.instance == 0:
+                self.use(className=view.className,resourceId=view.resourceId,packageName=view.package).click()
+                return "classNameresourceId"
+            else:
+                self.use.click(view.x ,view.y)
+                return "xy"
+        except:
+            self.use.click(view.x ,view.y)
+            return "xy"
+
     def longclick(self,view,strategy_list):
         try:
             if self.strategy != "language":

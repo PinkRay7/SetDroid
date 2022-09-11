@@ -82,6 +82,7 @@ class SetDroid(object):
         self.rest_interval = rest_interval
         self.trace_path = trace_path
 
+
         if root_path is not None:
             if not os.path.isdir(root_path):
                 os.makedirs(root_path)
