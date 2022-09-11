@@ -1,13 +1,16 @@
 import json
 import os
 import logging
+from pickletools import markobject
 import subprocess
 import time
+from turtle import update
 from device import Device
 from app import App
 from injector import Injector
 from policy import Policy,RandomPolicy
 import uiautomator2 as u2
+from macroevents import Macroevents
 from state import State
 from checker import Checker
 from event import Event
@@ -84,6 +87,7 @@ class Executor(object):
                 choice=self.choice)
 
         self.utils = Utils(devices=devices)
+        self.macroevents = Macroevents(self)
     
     def get_policy(self):
         if self.policy_name=="random":
@@ -482,6 +486,9 @@ class Executor(object):
             #clear and start app
             event_count=self.clear_and_restart_app(event_count,strategy)
             
+            #insert pre-actions here
+            self.macroevents.execute_preactions(self.app_path,self.devices,event_count)
+            
             while event_count<self.event_num:
 
                 #if the state of any device is different from last state, stoat need to judge (loading, foreground, same) again
@@ -535,6 +542,9 @@ class Executor(object):
                 event=self.policy.choice_event(self.devices[0],event_count)
                 self.utils.draw_event(event)
                 event.print_event()
+
+                #set macro_flag
+                macro_flag = self.macroevents.set_macro_flag(self.app_path,event)
                 
                 #execute event
                 for device in self.devices:
@@ -572,6 +582,10 @@ class Executor(object):
                     self.utils.write_read_event(None,event_count,event,"all device",device.device_num)
                     self.utils.write_event(event,device.device_num,device.f_trace)
                     event_count=self.save_all_state(event_count)
+
+                    # if event == click "add" btn, then execute macro events
+                    if macro_flag == True:
+                        self.macroevents.execute_macroevents_add(self.app_path,self.devices,event_count)
                 
                 self.checker.check_keyboard()
 
