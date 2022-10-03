@@ -118,7 +118,7 @@ class Macroevents(object):
                         break
             self.executor.update_all_state(event_count)
             cnt = cnt + 1
-            print("update"+cnt)
+            print("update")
             if cnt > len(view_list) + 2:
                 print("error now exit macroevent")
                 break
