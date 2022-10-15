@@ -97,7 +97,7 @@ class Checker(object):
         for device in self.devices:
             # device.use.set_clipboard('text', 'label')
             lines = device.state.lines
-            if "com.sohu.inputmethod.sogou:id/imeview_keyboard" in lines or "com.baidu.input_huawei" in lines:
+            if "com.sohu.inputmethod.sogou:id/imeview_keyboard" in lines or "com.baidu.input_huawei" in lines or "com.google.android.inputmethod.latin" in lines:
                 print("close_keyboard")
                 device.close_keyboard()
     
