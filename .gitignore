@@ -3,4 +3,4 @@
 *.html
 *.apk
 *.png
-./Tool/SetDroid/__pycache__/*
+Tool/SetDroid/__pycache__/*.pyc
