@@ -1,0 +1,6 @@
+*.txt
+*.xml
+*.html
+*.apk
+*.png
+./Tool/SetDroid/__pycache__/*
