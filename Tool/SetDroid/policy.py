@@ -88,8 +88,11 @@ class RandomPolicy(Policy):
         event=None
         click_classname_lists=["android.widget.RadioButton","android.view.View","android.widget.ImageView","android.widget.View","android.widget.CheckBox","android.widget.Button","android.widget.Switch","android.widget.ImageButton","android.widget.TextView","android.widget.CheckedTextView","android.widget.TableRow","android.widget.EditText","android.support.v7.widget.ar"]
         click_classname_lists_important=["android.widget.CheckBox","android.widget.Button","android.widget.Switch"]
+        # click_package_lists=[self.app.package_name,"android","com.android.settings","com.google.android",
+        # "com.google.android.inputmethod.latin","com.google.android.permissioncontroller","com.android.packageinstaller","com.android.permissioncontroller","com.google.android.packageinstaller"]
+        # delete keyboard
         click_package_lists=[self.app.package_name,"android","com.android.settings","com.google.android",
-        "com.google.android.inputmethod.latin","com.google.android.permissioncontroller","com.android.packageinstaller","com.android.permissioncontroller","com.google.android.packageinstaller"]
+        "com.google.android.permissioncontroller","com.android.packageinstaller","com.android.permissioncontroller","com.google.android.packageinstaller"]
         print("random:"+str(event_type))
         if event_type<self.pro_click:
             views=[]
@@ -100,6 +103,11 @@ class RandomPolicy(Policy):
                     import_views.append(view)
                 if view.className in click_classname_lists and view.package in click_package_lists and view.clickable=="true" :
                     views.append(view)
+                # fix Focus item clickable = false
+                if "focus" in self.app.package_name:
+                    focus_list = ["android.widget.RadioButton","android.widget.ImageView","android.widget.View","android.widget.CheckBox","android.widget.Button","android.widget.Switch","android.widget.ImageButton","android.widget.TextView","android.widget.CheckedTextView","android.widget.TableRow","android.widget.EditText","android.support.v7.widget.ar"]
+                    if view.className in focus_list and view.package in click_package_lists and view.clickable=="false" :
+                        views.append(view)
             if len(views)>0:
                 event_view_num = random.randint(0,len(views)-1)
                 event_view = views[event_view_num]
