@@ -447,6 +447,7 @@ class Executor(object):
             #add some files to the devices
         resourcelist=os.listdir(self.resource_path)
         for device in self.devices:
+            device.disable_keyboard()
             device.log_crash(self.root_path+"/"+device.device_serial+"_logcat.txt")
             for resource in resourcelist:
                 device.add_file(self.resource_path,resource,"/sdcard")

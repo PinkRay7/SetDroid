@@ -229,4 +229,7 @@ class Device(object):
     def mkdir(self,path):
         subprocess.run(["adb","-s",self.device_serial,"shell", "mkdir", path], stdout=subprocess.PIPE)
 
-
+    def disable_keyboard(self):
+        self.use.set_fastinput_ime(True)
+        # self.install_app(self.no_keyboard_app)
+        # subprocess.run(["adb","-s",self.device_serial,"ime","set","com.wparam.nullkeyboard/.NullKeyboard"])
